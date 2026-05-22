@@ -3,6 +3,22 @@
     { "source": "/", "destination": "/app.html" },
     { "source": "/lucky", "destination": "/app.html" },
     { "source": "/lucky-draw", "destination": "/app.html" },
-    { "source": "/design", "destination": "/DESIGN.md" }
+    { "source": "/design", "destination": "/DESIGN.md" },
+    { "source": "/DESIGN.md", "destination": "/DESIGN.md" }
+  ],
+  "headers": [
+    {
+      "source": "/DESIGN.md",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "inline; filename=\"Lucky-Draw-設計系統.md\""
+        }
+      ]
+    }
   ]
 }
