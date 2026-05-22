@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lucky Draw</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#ffb0cd",
+                      "secondary": "#b4136d",
+                      "surface-dim": "#d9dadb",
+                      "on-secondary-fixed": "#3e0022",
+                      "background": "#f8f9fa",
+                      "tertiary-container": "#b55d00",
+                      "on-secondary-fixed-variant": "#8c0053",
+                      "error": "#ba1a1a",
+                      "on-surface": "#191c1d",
+                      "outline": "#767586",
+                      "on-primary-fixed-variant": "#2f2ebe",
+                      "surface-container-highest": "#e1e3e4",
+                      "tertiary-fixed": "#ffdcc5",
+                      "on-error-container": "#93000a",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "on-surface-variant": "#464554",
+                      "on-primary-fixed": "#07006c",
+                      "inverse-on-surface": "#f0f1f2",
+                      "secondary-fixed": "#ffd9e4",
+                      "on-tertiary": "#ffffff",
+                      "surface-bright": "#f8f9fa",
+                      "primary": "#4648d4",
+                      "on-primary": "#ffffff",
+                      "surface": "#f8f9fa",
+                      "inverse-primary": "#c0c1ff",
+                      "surface-container-high": "#e7e8e9",
+                      "tertiary-fixed-dim": "#ffb783",
+                      "on-primary-container": "#fffbff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-variant": "#e1e3e4",
+                      "on-secondary-container": "#600037",
+                      "secondary-container": "#fd56a7",
+                      "on-tertiary-container": "#fffbff",
+                      "on-tertiary-fixed-variant": "#703700",
+                      "surface-tint": "#494bd6",
+                      "primary-fixed": "#e1e0ff",
+                      "primary-container": "#6063ee",
+                      "on-error": "#ffffff",
+                      "tertiary": "#904900",
+                      "surface-container-low": "#f3f4f5",
+                      "error-container": "#ffdad6",
+                      "surface-container": "#edeeef",
+                      "on-background": "#191c1d",
+                      "on-tertiary-fixed": "#301400",
+                      "on-secondary": "#ffffff",
+                      "outline-variant": "#c7c4d7",
+                      "inverse-surface": "#2e3132"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "element-gap": "16px",
+                      "unit": "8px",
+                      "section-margin": "40px",
+                      "touch-target": "48px",
+                      "container-padding": "24px"
+              },
+              "fontFamily": {
+                      "display-rng": ["Sora"],
+                      "headline-md": ["Sora"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "label-bold": ["Inter"],
+                      "headline-lg": ["Sora"]
+              },
+              "fontSize": {
+                      "display-rng": ["80px", {"lineHeight": "90px", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .draw-animation {
+            animation: pulse-result 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes pulse-result {
+            0% { transform: scale(0.9); opacity: 0.5; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #191c1d;
+            -webkit-font-smoothing: antialiased;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* 手機版滾動設定 */
+        @media (max-width: 767px) {
+            .mobile-scrollable {
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+                overscroll-behavior: contain;
+                padding-bottom: 2rem;
+            }
+            .mobile-scrollable::-webkit-scrollbar {
+                display: none;
+            }
+            .mobile-scrollable {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            
+            /* 設定頁面專用滾動優化 */
+            .settings-scrollable {
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+                overscroll-behavior: contain;
+                padding-bottom: 2rem;
+            }
+            .settings-scrollable::-webkit-scrollbar {
+                display: none;
+            }
+            .settings-scrollable {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+    </style>
+<style>
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+    
+    /* 手機版滾動修正 */
+    @media (max-width: 767px) {
+      body {
+        overflow-x: hidden;
+      }
+      html {
+        overflow-x: hidden;
+      }
+    }
+    
+    /* 統一網頁版和手機版尺寸 - 桌面版完全模擬手機版 */
+    @media (min-width: 768px) {
+      html, body {
+        width: 414px;
+        max-width: 414px;
+        margin: 0 auto;
+        overflow-x: hidden;
+      }
+      
+      body {
+        min-height: 100vh;
+        min-height: 100dvh;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+      }
+    }
+    
+    /* 確保所有設備上顯示一致 */
+    .universal-container {
+      width: 100%;
+      max-width: 414px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    @media (max-width: 413px) {
+      .universal-container {
+        padding: 0 16px;
+      }
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md">
+<!-- Main Screen -->
+<div class="fixed inset-0 z-40">
+<div class="universal-container h-full flex flex-col bg-surface">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between py-4 border-b border-outline-variant relative z-10">
+<div class="w-10 h-10"></div>
+<h1 class="font-headline-md text-headline-md text-primary font-bold">Lucky Draw</h1>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95 rounded-full relative z-20" onclick="toggleSettings()">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+
+<!-- Main Content -->
+<main class="flex-grow mobile-scrollable py-8">
+<div class="w-full max-w-sm space-y-6 pb-8">
+<!-- RNG Result Display Area -->
+<section class="flex flex-col items-center justify-center mb-section-margin">
+<div class="relative w-64 h-64 rounded-full bg-surface-container-lowest border border-outline-variant shadow-lg flex items-center justify-center transition-all duration-300" id="result-container">
+<div class="absolute inset-0 rounded-full opacity-10 bg-gradient-to-tr from-primary to-secondary"></div>
+<span class="font-display-rng text-display-rng text-primary tabular-nums" id="draw-result">00</span>
+</div>
+<p class="mt-element-gap font-label-bold text-label-bold text-on-surface-variant">點擊按鈕開始抽取</p>
+</section>
+<!-- Controls Section -->
+<section class="space-y-6 mb-section-margin">
+<div class="grid grid-cols-2 gap-element-gap">
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block ml-1">最小值</label>
+<div class="flex items-center bg-surface-container border border-outline-variant rounded-xl p-1 h-touch-target">
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-lg transition-colors" onclick="decrement('min')">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<input class="w-full bg-transparent border-none text-center font-headline-md text-headline-md focus:ring-0 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden" id="min-val" min="0" type="number" value="1"/>
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-lg transition-colors" onclick="increment('min')">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block ml-1">最大值</label>
+<div class="flex items-center bg-surface-container border border-outline-variant rounded-xl p-1 h-touch-target">
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-lg transition-colors" onclick="decrement('max')">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<input class="w-full bg-transparent border-none text-center font-headline-md text-headline-md focus:ring-0 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden" id="max-val" min="1" type="number" value="100"/>
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-lg transition-colors" onclick="increment('max')">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+<button class="w-full h-16 bg-primary text-on-primary font-headline-md text-headline-md rounded-xl shadow-[0_4px_12px_rgba(70,72,212,0.2)] hover:bg-primary-container transition-all active:scale-95 flex items-center justify-center gap-2" id="draw-btn" onclick="startDraw()">
+<span class="material-symbols-outlined" data-icon="bolt" data-weight="fill" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span>開始抽籤</span>
+</button>
+</section>
+<!-- History Section -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface">歷史記錄</h3>
+<button class="text-secondary font-label-bold text-label-bold hover:underline" onclick="clearHistory()">清除</button>
+</div>
+<div class="flex flex-wrap gap-2" id="history-list">
+<!-- History chips injected here -->
+<p class="text-on-surface-variant font-body-md text-body-md opacity-60 italic" id="empty-history">尚無歷史記錄</p>
+</div>
+</section>
+</main>
+</div>
+</div>
+
+<!-- Settings Screen -->
+<div id="settings-screen" class="fixed inset-0 z-50 hidden">
+<div class="universal-container h-full flex flex-col bg-surface">
+<!-- Settings Header -->
+<header class="flex items-center justify-between py-4 border-b border-outline-variant">
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-full transition-colors active:scale-95" onclick="toggleSettings()">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface font-bold">設定</h1>
+<div class="w-10 h-10"></div>
+</header>
+
+<!-- Settings Content -->
+<main class="flex-grow settings-scrollable py-8">
+<div class="w-full max-w-sm space-y-6 pb-8">
+
+<!-- App Info -->
+<div class="text-center space-y-4">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Lucky Draw</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">版本 1.0.0</p>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+一個簡單美觀的隨機數字生成器<br>
+為您的活動和遊戲提供公平的抽籤體驗
+</p>
+</div>
+
+<!-- Features -->
+<div class="bg-surface-container rounded-xl p-6 space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface text-center">主要功能</h3>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">shuffle</span>
+<span class="font-body-md text-body-md text-on-surface">隨機數字生成</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">history</span>
+<span class="font-body-md text-body-md text-on-surface">歷史記錄追蹤</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">tune</span>
+<span class="font-body-md text-body-md text-on-surface">自訂數值範圍</span>
+</div>
+</div>
+</div>
+
+<!-- Download Design -->
+<div class="bg-surface-container rounded-xl p-6 space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface text-center">設計資源</h3>
+<div class="text-center space-y-4">
+<p class="font-body-md text-body-md text-on-surface-variant">
+下載完整設計系統文件，包含色彩、字體、間距等所有設計規範
+</p>
+<a href="d:\desinglab\DESIGN.md" download="Lucky-Draw-設計系統.md" class="w-full bg-primary text-on-primary font-label-bold text-label-bold rounded-xl py-3 px-4 hover:bg-primary-container transition-all active:scale-95 flex items-center justify-center gap-2 inline-block text-center no-underline">
+<span class="material-symbols-outlined">download</span>
+<span>下載設計系統</span>
+</a>
+</div>
+</div>
+
+<!-- Copyright -->
+<div class="text-center pt-4">
+<p class="font-body-md text-body-md text-on-surface-variant opacity-60">
+© 2026 Lucky Draw
+</p>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+<script>
+        const history = [];
+        let appData = {
+            settings: {
+                minValue: 1,
+                maxValue: 100,
+                historyLimit: 8
+            },
+            statistics: {
+                totalDraws: 0,
+                allTimeHistory: []
+            }
+        };
+
+        // Initialize app data from localStorage
+        function initializeApp() {
+            const savedData = localStorage.getItem('lucky-draw-app-data');
+            if (savedData) {
+                appData = JSON.parse(savedData);
+                // Restore settings to UI
+                document.getElementById('min-val').value = appData.settings.minValue;
+                document.getElementById('max-val').value = appData.settings.maxValue;
+            }
+            // Load history
+            loadHistory();
+        }
+
+        // Save app data to localStorage
+        function saveAppData() {
+            localStorage.setItem('lucky-draw-app-data', JSON.stringify(appData));
+        }
+
+        // Load history from localStorage
+        function loadHistory() {
+            const savedHistory = localStorage.getItem('lucky-draw-history');
+            if (savedHistory) {
+                history.length = 0;
+                history.push(...JSON.parse(savedHistory));
+                renderHistory();
+            }
+        }
+
+        // Save history to localStorage
+        function saveHistory() {
+            localStorage.setItem('lucky-draw-history', JSON.stringify(history));
+        }
+
+        // Update settings when values change
+        function updateSettings(key, value) {
+            if (key === 'min') {
+                appData.settings.minValue = value;
+            } else if (key === 'max') {
+                appData.settings.maxValue = value;
+            }
+            saveAppData();
+        }
+
+        // Toggle settings screen
+        function toggleSettings() {
+            const settingsScreen = document.getElementById('settings-screen');
+            
+            if (settingsScreen.classList.contains('hidden')) {
+                // Show settings screen
+                settingsScreen.classList.remove('hidden');
+                settingsScreen.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    settingsScreen.style.transform = 'translateX(0)';
+                    settingsScreen.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                }, 10);
+            } else {
+                // Hide settings screen
+                settingsScreen.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    settingsScreen.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+                
+        function increment(id) {
+            const input = document.getElementById(id + '-val');
+            const newValue = parseInt(input.value) + 1;
+            input.value = newValue;
+            updateSettings(id, newValue);
+        }
+
+        function decrement(id) {
+            const input = document.getElementById(id + '-val');
+            const currentValue = parseInt(input.value);
+            if (currentValue > 0) {
+                const newValue = currentValue - 1;
+                input.value = newValue;
+                updateSettings(id, newValue);
+            }
+        }
+
+        function startDraw() {
+            const min = parseInt(document.getElementById('min-val').value);
+            const max = parseInt(document.getElementById('max-val').value);
+            const resultEl = document.getElementById('draw-result');
+            const resultContainer = document.getElementById('result-container');
+            const btn = document.getElementById('draw-btn');
+
+            if (min >= max) {
+                alert('最小值必須小於最大值');
+                return;
+            }
+
+            // Disable interaction
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'scale-95');
+
+            // Rapid rolling effect
+            let counter = 0;
+            const interval = setInterval(() => {
+                const tempRand = Math.floor(Math.random() * (max - min + 1)) + min;
+                resultEl.innerText = tempRand.toString().padStart(2, '0');
+                counter++;
+                if (counter > 15) {
+                    clearInterval(interval);
+                    finalizeDraw(min, max);
+                }
+            }, 60);
+        }
+
+        function finalizeDraw(min, max) {
+            const finalResult = Math.floor(Math.random() * (max - min + 1)) + min;
+            const resultEl = document.getElementById('draw-result');
+            const resultContainer = document.getElementById('result-container');
+            const btn = document.getElementById('draw-btn');
+
+            resultEl.innerText = finalResult.toString().padStart(2, '0');
+            
+            // Animation
+            resultContainer.classList.remove('draw-animation');
+            void resultContainer.offsetWidth; // trigger reflow
+            resultContainer.classList.add('draw-animation');
+
+            // Add to history
+            addToHistory(finalResult);
+
+            // Re-enable
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'scale-95');
+        }
+
+        function addToHistory(val) {
+            const historyItem = {
+                value: val,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                date: new Date().toLocaleDateString(),
+                timestamp: Date.now()
+            };
+            
+            // Add to current history
+            history.unshift(historyItem);
+            
+            // Add to all-time history
+            appData.statistics.allTimeHistory.unshift(historyItem);
+            
+            // Update statistics
+            appData.statistics.totalDraws++;
+            
+            // Limit history display
+            if (history.length > appData.settings.historyLimit) {
+                history.pop();
+            }
+            
+            // Limit all-time history (keep last 1000)
+            if (appData.statistics.allTimeHistory.length > 1000) {
+                appData.statistics.allTimeHistory.pop();
+            }
+            
+            // Save data
+            saveHistory();
+            saveAppData();
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            
+            if (history.length > 0) {
+                list.innerHTML = history.map(item => `
+                    <div class="flex flex-col items-center justify-center px-4 py-2 bg-surface-container border border-outline-variant rounded-lg animate-in fade-in slide-in-from-bottom-1 duration-300">
+                        <span class="font-headline-md text-headline-md text-secondary">${item.value}</span>
+                        <span class="text-[10px] text-on-surface-variant font-label-bold uppercase">${item.time}</span>
+                    </div>
+                `).join('');
+            } else {
+                list.innerHTML = '<p class="text-on-surface-variant font-body-md text-body-md opacity-60 italic" id="empty-history">尚無歷史記錄</p>';
+            }
+        }
+
+        function clearHistory() {
+            // Clear current history
+            history.length = 0;
+            
+            // Clear all-time history
+            appData.statistics.allTimeHistory = [];
+            
+            // Reset statistics
+            appData.statistics.totalDraws = 0;
+            
+            // Save data
+            saveHistory();
+            saveAppData();
+            renderHistory();
+        }
+
+        // Initialize app when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+            </script>
+</body></html>
