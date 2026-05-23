@@ -243,7 +243,7 @@
 <button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-lg transition-colors" onclick="decrement('max')">
 <span class="material-symbols-outlined" data-icon="remove">remove</span>
 </button>
-<input class="w-full bg-transparent border-none text-center font-headline-md text-headline-md focus:ring-0 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden" id="max-val" min="1" type="number" value="100"/>
+<input class="w-full bg-transparent border-none text-center font-headline-md text-headline-md focus:ring-0 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden" id="max-val" min="1" type="number" value="10000"/>
 <button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-lg transition-colors" onclick="increment('max')">
 <span class="material-symbols-outlined" data-icon="add">add</span>
 </button>
@@ -345,7 +345,7 @@
         let appData = {
             settings: {
                 minValue: 1,
-                maxValue: 100,
+                maxValue: 10000,
                 historyLimit: 8
             },
             statistics: {
