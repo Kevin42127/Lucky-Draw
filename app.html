@@ -254,6 +254,10 @@
 <span class="material-symbols-outlined" data-icon="bolt" data-weight="fill" style="font-variation-settings: 'FILL' 1;">bolt</span>
 <span>開始抽籤</span>
 </button>
+<button class="w-full h-12 bg-surface-container text-on-surface font-label-bold text-label-bold rounded-xl border border-outline-variant hover:bg-surface-container-high transition-all active:scale-95 flex items-center justify-center gap-2" onclick="resetValues()">
+<span class="material-symbols-outlined">refresh</span>
+<span>重設數值</span>
+</button>
 </section>
 <!-- History Section -->
 <section class="space-y-4">
@@ -671,6 +675,24 @@
             saveHistory();
             saveAppData();
             renderHistory();
+        }
+
+        // Reset values function
+        function resetValues() {
+            // 重設為1
+            const minValue = 1;
+            const maxValue = 1;
+            
+            // 更新輸入框
+            document.getElementById('min-val').value = minValue;
+            document.getElementById('max-val').value = maxValue;
+            
+            // 更新設定
+            appData.settings.minValue = minValue;
+            appData.settings.maxValue = maxValue;
+            
+            // 儲存設定
+            saveAppData();
         }
 
         // Custom Alert Functions
