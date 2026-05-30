@@ -1,6 +1,4 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/app.html" },
-    { "source": "/(.*)", "destination": "/app.html" }
-  ]
+  "cleanUrls": true,
+  "trailingSlash": false
 }
