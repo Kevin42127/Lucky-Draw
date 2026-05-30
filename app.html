@@ -4,6 +4,13 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Lucky Draw</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#4648d4"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="Lucky Draw"/>
+<link rel="apple-touch-icon" href="public/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" href="public/favicon-96x96.png"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -150,6 +157,47 @@
                 scrollbar-width: none;
             }
         }
+        
+        /* 桌面版滾動設定 */
+        @media (min-width: 768px) {
+            .mobile-scrollable {
+                overflow-y: auto;
+                scroll-behavior: smooth;
+                padding-bottom: 2rem;
+            }
+            .mobile-scrollable::-webkit-scrollbar {
+                width: 6px;
+            }
+            .mobile-scrollable::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .mobile-scrollable::-webkit-scrollbar-thumb {
+                background: #767586;
+                border-radius: 3px;
+            }
+            .mobile-scrollable::-webkit-scrollbar-thumb:hover {
+                background: #464554;
+            }
+            
+            .settings-scrollable {
+                overflow-y: auto;
+                scroll-behavior: smooth;
+                padding-bottom: 2rem;
+            }
+            .settings-scrollable::-webkit-scrollbar {
+                width: 6px;
+            }
+            .settings-scrollable::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .settings-scrollable::-webkit-scrollbar-thumb {
+                background: #767586;
+                border-radius: 3px;
+            }
+            .settings-scrollable::-webkit-scrollbar-thumb:hover {
+                background: #464554;
+            }
+        }
     </style>
 <style>
     body {
@@ -204,7 +252,9 @@
 <div class="universal-container h-full flex flex-col bg-surface">
 <!-- Top Navigation -->
 <header class="flex items-center justify-between py-4 border-b border-outline-variant relative z-10">
-<div class="w-10 h-10"></div>
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors active:scale-95 rounded-full relative z-20" onclick="toggleAbout()">
+<span class="material-symbols-outlined">info</span>
+</button>
 <h1 class="font-headline-md text-headline-md text-primary font-bold">Lucky Draw</h1>
 <button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95 rounded-full relative z-20" onclick="toggleSettings()">
 <span class="material-symbols-outlined">settings</span>
@@ -299,6 +349,89 @@
     </div>
 </div>
 
+<!-- About Screen -->
+<div id="about-screen" class="fixed inset-0 z-50 hidden">
+<div class="universal-container h-full flex flex-col bg-surface">
+<!-- About Header -->
+<header class="flex items-center justify-between py-4 border-b border-outline-variant">
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-full transition-colors active:scale-95" onclick="toggleAbout()">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface font-bold">關於</h1>
+<div class="w-10 h-10"></div>
+</header>
+
+<!-- About Content -->
+<main class="flex-grow mobile-scrollable py-8">
+<div class="w-full max-w-sm space-y-6 pb-8">
+
+<!-- App Info -->
+<div class="text-center space-y-4">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Lucky Draw</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">版本 1.0.0</p>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+一個簡單美觀的隨機數字生成器<br>
+為您的活動和遊戲提供公平的抽籤體驗
+</p>
+</div>
+
+<!-- Features -->
+<div class="bg-surface-container rounded-xl p-6 space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface text-center">應用特色</h3>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">speed</span>
+<span class="font-body-md text-body-md text-on-surface">快速隨機生成</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">history</span>
+<span class="font-body-md text-body-md text-on-surface">完整歷史記錄</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">tune</span>
+<span class="font-body-md text-body-md text-on-surface">彈性數值範圍</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">phone_android</span>
+<span class="font-body-md text-body-md text-on-surface">PWA 支援</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">offline_bolt</span>
+<span class="font-body-md text-body-md text-on-surface">離線可用</span>
+</div>
+</div>
+</div>
+
+<!-- How to Use -->
+<div class="bg-surface-container rounded-xl p-6 space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface text-center">使用說明</h3>
+<div class="space-y-3 text-body-md text-body-md text-on-surface-variant">
+<p>1. 設定最小值和最大值範圍</p>
+<p>2. 點擊「開始抽籤」按鈕</p>
+<p>3. 查看隨機生成的結果</p>
+<p>4. 歷史記錄會自動保存</p>
+</div>
+</div>
+
+<!-- Privacy -->
+<div class="bg-surface-container rounded-xl p-6 space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface text-center">隱私權</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+本應用完全在您的裝置上運行，所有數據都儲存在本地。我們不會收集、傳輸或儲存任何個人資訊。您的抽籤記錄和設定僅保存在您的瀏覽器中。
+</p>
+</div>
+
+<!-- Copyright -->
+<div class="text-center pt-4">
+<p class="font-body-md text-body-md text-on-surface-variant opacity-60">
+© 2026 Lucky Draw
+</p>
+</div>
+</div>
+</main>
+</div>
+</div>
+
 <!-- Settings Screen -->
 <div id="settings-screen" class="fixed inset-0 z-50 hidden">
 <div class="universal-container h-full flex flex-col bg-surface">
@@ -340,6 +473,39 @@
 <div class="flex items-center gap-3">
 <span class="material-symbols-outlined text-primary">tune</span>
 <span class="font-body-md text-body-md text-on-surface">自訂數值範圍</span>
+</div>
+</div>
+</div>
+
+<!-- How to Install -->
+<div class="bg-surface-container rounded-xl p-6 space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface text-center">如何安裝到主畫面</h3>
+<div class="space-y-4">
+<div class="space-y-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary">android</span>
+<h4 class="font-label-bold text-label-bold text-on-surface">Android</h4>
+</div>
+<ol class="space-y-2 text-body-md text-body-md text-on-surface-variant list-decimal list-inside">
+<li>在 Chrome 瀏覽器中開啟此應用</li>
+<li>點擊選單按鈕（三個點）</li>
+<li>選擇「安裝應用程式」或「加入主畫面」</li>
+<li>確認安裝</li>
+</ol>
+<a href="https://support.google.com/chrome/answer/16738043?hl=zh-Hant" target="_blank" class="text-secondary font-label-bold text-label-bold hover:underline text-sm">查看詳細說明</a>
+</div>
+<div class="border-t border-outline-variant pt-4 space-y-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary">phone_iphone</span>
+<h4 class="font-label-bold text-label-bold text-on-surface">iOS (iPhone/iPad)</h4>
+</div>
+<ol class="space-y-2 text-body-md text-body-md text-on-surface-variant list-decimal list-inside">
+<li>在 Safari 瀏覽器中開啟此應用</li>
+<li>點擊分享按鈕（方形加箭頭）</li>
+<li>向下滑動並選擇「加入主畫面」</li>
+<li>點擊「加入」確認</li>
+</ol>
+<a href="https://mrmad.com.tw/add-iphone-chrome-web-page-to-main-screen" target="_blank" class="text-secondary font-label-bold text-label-bold hover:underline text-sm">查看詳細說明</a>
 </div>
 </div>
 </div>
@@ -439,6 +605,27 @@
                 settingsScreen.style.transform = 'translateX(100%)';
                 setTimeout(() => {
                     settingsScreen.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Toggle about screen
+        function toggleAbout() {
+            const aboutScreen = document.getElementById('about-screen');
+            
+            if (aboutScreen.classList.contains('hidden')) {
+                // Show about screen
+                aboutScreen.classList.remove('hidden');
+                aboutScreen.style.transform = 'translateX(-100%)';
+                setTimeout(() => {
+                    aboutScreen.style.transform = 'translateX(0)';
+                    aboutScreen.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                }, 10);
+            } else {
+                // Hide about screen
+                aboutScreen.style.transform = 'translateX(-100%)';
+                setTimeout(() => {
+                    aboutScreen.classList.add('hidden');
                 }, 300);
             }
         }
@@ -645,6 +832,17 @@
         // Initialize app when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
+            
+            // Register Service Worker for PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker 註冊成功:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker 註冊失敗:', error);
+                    });
+            }
         });
 
             </script>
