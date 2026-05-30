@@ -1,14 +1,833 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="refresh" content="0;url=app.html"/>
-    <title>Lucky Draw</title>
-</head>
-<body>
-    <script>
-        window.location.href = 'app.html';
-    </script>
-    <p>正在重新導向到應用程式... <a href="app.html">如果沒有自動跳轉，請點擊這裡</a></p>
-</body>
-</html>
+
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lucky Draw</title>
+<link rel="apple-touch-icon" href="public/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" href="public/favicon-96x96.png"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#ffb0cd",
+                      "secondary": "#b4136d",
+                      "surface-dim": "#d9dadb",
+                      "on-secondary-fixed": "#3e0022",
+                      "background": "#f8f9fa",
+                      "tertiary-container": "#b55d00",
+                      "on-secondary-fixed-variant": "#8c0053",
+                      "error": "#ba1a1a",
+                      "on-surface": "#191c1d",
+                      "outline": "#767586",
+                      "on-primary-fixed-variant": "#2f2ebe",
+                      "surface-container-highest": "#e1e3e4",
+                      "tertiary-fixed": "#ffdcc5",
+                      "on-error-container": "#93000a",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "on-surface-variant": "#464554",
+                      "on-primary-fixed": "#07006c",
+                      "inverse-on-surface": "#f0f1f2",
+                      "secondary-fixed": "#ffd9e4",
+                      "on-tertiary": "#ffffff",
+                      "surface-bright": "#f8f9fa",
+                      "primary": "#4648d4",
+                      "on-primary": "#ffffff",
+                      "surface": "#f8f9fa",
+                      "inverse-primary": "#c0c1ff",
+                      "surface-container-high": "#e7e8e9",
+                      "tertiary-fixed-dim": "#ffb783",
+                      "on-primary-container": "#fffbff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-variant": "#e1e3e4",
+                      "on-secondary-container": "#600037",
+                      "secondary-container": "#fd56a7",
+                      "on-tertiary-container": "#fffbff",
+                      "on-tertiary-fixed-variant": "#703700",
+                      "surface-tint": "#494bd6",
+                      "primary-fixed": "#e1e0ff",
+                      "primary-container": "#6063ee",
+                      "on-error": "#ffffff",
+                      "tertiary": "#904900",
+                      "surface-container-low": "#f3f4f5",
+                      "error-container": "#ffdad6",
+                      "surface-container": "#edeeef",
+                      "on-background": "#191c1d",
+                      "on-tertiary-fixed": "#301400",
+                      "on-secondary": "#ffffff",
+                      "outline-variant": "#c7c4d7",
+                      "inverse-surface": "#2e3132"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "element-gap": "16px",
+                      "unit": "8px",
+                      "section-margin": "40px",
+                      "touch-target": "48px",
+                      "container-padding": "24px"
+              },
+              "fontFamily": {
+                      "display-rng": ["Sora"],
+                      "headline-md": ["Sora"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "label-bold": ["Inter"],
+                      "headline-lg": ["Sora"]
+              },
+              "fontSize": {
+                      "display-rng": ["80px", {"lineHeight": "90px", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .draw-animation {
+            animation: pulse-result 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes pulse-result {
+            0% { transform: scale(0.9); opacity: 0.5; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #191c1d;
+            -webkit-font-smoothing: antialiased;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* 手機版滾動設定 */
+        @media (max-width: 767px) {
+            .mobile-scrollable {
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+                overscroll-behavior: contain;
+                padding-bottom: 2rem;
+            }
+            .mobile-scrollable::-webkit-scrollbar {
+                display: none;
+            }
+            .mobile-scrollable {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            
+            /* 設定頁面專用滾動優化 */
+            .settings-scrollable {
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+                overscroll-behavior: contain;
+                padding-bottom: 2rem;
+            }
+            .settings-scrollable::-webkit-scrollbar {
+                display: none;
+            }
+            .settings-scrollable {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+        
+        /* 桌面版滾動設定 */
+        @media (min-width: 768px) {
+            .mobile-scrollable {
+                overflow-y: auto;
+                scroll-behavior: smooth;
+                padding-bottom: 2rem;
+            }
+            .mobile-scrollable::-webkit-scrollbar {
+                width: 6px;
+            }
+            .mobile-scrollable::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .mobile-scrollable::-webkit-scrollbar-thumb {
+                background: #767586;
+                border-radius: 3px;
+            }
+            .mobile-scrollable::-webkit-scrollbar-thumb:hover {
+                background: #464554;
+            }
+            
+            .settings-scrollable {
+                overflow-y: auto;
+                scroll-behavior: smooth;
+                padding-bottom: 2rem;
+            }
+            .settings-scrollable::-webkit-scrollbar {
+                width: 6px;
+            }
+            .settings-scrollable::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .settings-scrollable::-webkit-scrollbar-thumb {
+                background: #767586;
+                border-radius: 3px;
+            }
+            .settings-scrollable::-webkit-scrollbar-thumb:hover {
+                background: #464554;
+            }
+        }
+    </style>
+<style>
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+    
+    /* 手機版滾動修正 */
+    @media (max-width: 767px) {
+      body {
+        overflow-x: hidden;
+      }
+      html {
+        overflow-x: hidden;
+      }
+    }
+    
+    /* 統一網頁版和手機版尺寸 - 桌面版完全模擬手機版 */
+    @media (min-width: 768px) {
+      html, body {
+        width: 414px;
+        max-width: 414px;
+        margin: 0 auto;
+        overflow-x: hidden;
+      }
+      
+      body {
+        min-height: 100vh;
+        min-height: 100dvh;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+      }
+    }
+    
+    /* 確保所有設備上顯示一致 */
+    .universal-container {
+      width: 100%;
+      max-width: 414px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    @media (max-width: 413px) {
+      .universal-container {
+        padding: 0 16px;
+      }
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md">
+<!-- Main Screen -->
+<div class="fixed inset-0 z-40">
+<div class="universal-container h-full flex flex-col bg-surface">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between py-4 border-b border-outline-variant relative z-10">
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors active:scale-95 rounded-full relative z-20" onclick="toggleAbout()">
+<span class="material-symbols-outlined">info</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary font-bold">Lucky Draw</h1>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95 rounded-full relative z-20" onclick="toggleSettings()">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+
+<!-- Main Content -->
+<main class="flex-grow mobile-scrollable py-8">
+<div class="w-full max-w-sm space-y-6 pb-8">
+<!-- RNG Result Display Area -->
+<section class="flex flex-col items-center justify-center mb-section-margin">
+<div class="relative w-64 h-64 rounded-full bg-surface-container-lowest border border-outline-variant shadow-lg flex items-center justify-center transition-all duration-300" id="result-container">
+<div class="absolute inset-0 rounded-full opacity-10 bg-gradient-to-tr from-primary to-secondary"></div>
+<span class="font-display-rng text-display-rng text-primary tabular-nums" id="draw-result">00</span>
+</div>
+<p class="mt-element-gap font-label-bold text-label-bold text-on-surface-variant">點擊按鈕開始抽取</p>
+</section>
+<!-- Controls Section -->
+<section class="space-y-6 mb-section-margin">
+<div class="grid grid-cols-2 gap-element-gap">
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block ml-1">最小值</label>
+<div class="flex items-center bg-surface-container border border-outline-variant rounded-xl p-1 h-touch-target">
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-lg transition-colors" onclick="decrement('min')">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<input class="w-full bg-transparent border-none text-center font-headline-md text-headline-md focus:ring-0 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden" id="min-val" min="0" type="number" value="1"/>
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-lg transition-colors" onclick="increment('min')">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-bold text-label-bold text-on-surface-variant block ml-1">最大值</label>
+<div class="flex items-center bg-surface-container border border-outline-variant rounded-xl p-1 h-touch-target">
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-lg transition-colors" onclick="decrement('max')">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<input class="w-full bg-transparent border-none text-center font-headline-md text-headline-md focus:ring-0 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden" id="max-val" min="1" max="10000" type="number" value="1" oninput="validateMaxInput(this)"/>
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-lg transition-colors" onclick="increment('max')">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+<button class="w-full h-16 bg-primary text-on-primary font-headline-md text-headline-md rounded-xl shadow-[0_4px_12px_rgba(70,72,212,0.2)] hover:bg-primary-container transition-all active:scale-95 flex items-center justify-center gap-2" id="draw-btn" onclick="startDraw()">
+<span class="material-symbols-outlined" data-icon="bolt" data-weight="fill" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span>開始抽籤</span>
+</button>
+<button class="w-full h-12 bg-surface-container text-on-surface font-label-bold text-label-bold rounded-xl border border-outline-variant hover:bg-surface-container-high transition-all active:scale-95 flex items-center justify-center gap-2" onclick="resetValues()">
+<span class="material-symbols-outlined">refresh</span>
+<span>重設數值</span>
+</button>
+</section>
+<!-- History Section -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface">歷史記錄</h3>
+<button class="text-secondary font-label-bold text-label-bold hover:underline" onclick="clearHistory()">清除</button>
+</div>
+<div class="flex flex-wrap gap-2" id="history-list">
+<!-- History chips injected here -->
+<p class="text-on-surface-variant font-body-md text-body-md opacity-60 italic" id="empty-history">尚無歷史記錄</p>
+</div>
+</section>
+</main>
+</div>
+</div>
+
+<!-- Custom Alert Modal -->
+<div id="custom-alert" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="hideCustomAlert()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-surface rounded-2xl shadow-2xl max-w-sm w-full transform transition-all duration-300 scale-95 opacity-0" id="custom-alert-content">
+            <div class="p-6 space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-error-container rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-error">error</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-headline-md text-headline-md text-on-surface">提示</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant mt-1" id="custom-alert-message">訊息內容</p>
+                    </div>
+                </div>
+                <div class="flex justify-end pt-2">
+                    <button class="bg-primary text-on-primary font-label-bold text-label-bold rounded-xl py-2 px-6 hover:bg-primary-container transition-all active:scale-95" onclick="hideCustomAlert()">
+                        確定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- About Screen -->
+<div id="about-screen" class="fixed inset-0 z-50 hidden">
+<div class="universal-container h-full flex flex-col bg-surface">
+<!-- About Header -->
+<header class="flex items-center justify-between py-4 border-b border-outline-variant">
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-full transition-colors active:scale-95" onclick="toggleAbout()">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface font-bold">關於</h1>
+<div class="w-10 h-10"></div>
+</header>
+
+<!-- About Content -->
+<main class="flex-grow mobile-scrollable py-8">
+<div class="w-full max-w-sm space-y-6 pb-8">
+
+<!-- App Info -->
+<div class="text-center space-y-4">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Lucky Draw</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">版本 1.0.0</p>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+一個簡單美觀的隨機數字生成器<br>
+為您的活動和遊戲提供公平的抽籤體驗
+</p>
+</div>
+
+<!-- Features -->
+<div class="bg-surface-container rounded-xl p-6 space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface text-center">應用特色</h3>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">speed</span>
+<span class="font-body-md text-body-md text-on-surface">快速隨機生成</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">history</span>
+<span class="font-body-md text-body-md text-on-surface">完整歷史記錄</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">tune</span>
+<span class="font-body-md text-body-md text-on-surface">彈性數值範圍</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">phone_android</span>
+<span class="font-body-md text-body-md text-on-surface">PWA 支援</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">offline_bolt</span>
+<span class="font-body-md text-body-md text-on-surface">離線可用</span>
+</div>
+</div>
+</div>
+
+<!-- How to Use -->
+<div class="bg-surface-container rounded-xl p-6 space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface text-center">使用說明</h3>
+<div class="space-y-3 text-body-md text-body-md text-on-surface-variant">
+<p>1. 設定最小值和最大值範圍</p>
+<p>2. 點擊「開始抽籤」按鈕</p>
+<p>3. 查看隨機生成的結果</p>
+<p>4. 歷史記錄會自動保存</p>
+</div>
+</div>
+
+<!-- Privacy -->
+<div class="bg-surface-container rounded-xl p-6 space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface text-center">隱私權</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+本應用完全在您的裝置上運行，所有數據都儲存在本地。我們不會收集、傳輸或儲存任何個人資訊。您的抽籤記錄和設定僅保存在您的瀏覽器中。
+</p>
+</div>
+
+<!-- Copyright -->
+<div class="text-center pt-4">
+<p class="font-body-md text-body-md text-on-surface-variant opacity-60">
+© 2026 Lucky Draw
+</p>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+<!-- Settings Screen -->
+<div id="settings-screen" class="fixed inset-0 z-50 hidden">
+<div class="universal-container h-full flex flex-col bg-surface">
+<!-- Settings Header -->
+<header class="flex items-center justify-between py-4 border-b border-outline-variant">
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-full transition-colors active:scale-95" onclick="toggleSettings()">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface font-bold">設定</h1>
+<div class="w-10 h-10"></div>
+</header>
+
+<!-- Settings Content -->
+<main class="flex-grow settings-scrollable py-8">
+<div class="w-full max-w-sm space-y-6 pb-8">
+
+<!-- App Info -->
+<div class="text-center space-y-4">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Lucky Draw</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">版本 1.0.0</p>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+一個簡單美觀的隨機數字生成器<br>
+為您的活動和遊戲提供公平的抽籤體驗
+</p>
+</div>
+
+<!-- Features -->
+<div class="bg-surface-container rounded-xl p-6 space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface text-center">主要功能</h3>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">shuffle</span>
+<span class="font-body-md text-body-md text-on-surface">隨機數字生成</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">history</span>
+<span class="font-body-md text-body-md text-on-surface">歷史記錄追蹤</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">tune</span>
+<span class="font-body-md text-body-md text-on-surface">自訂數值範圍</span>
+</div>
+</div>
+</div>
+
+<!-- How to Install -->
+<div class="bg-surface-container rounded-xl p-6 space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-surface text-center">如何安裝到主畫面</h3>
+<div class="space-y-4">
+<div class="space-y-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary">android</span>
+<h4 class="font-label-bold text-label-bold text-on-surface">Android</h4>
+</div>
+<ol class="space-y-2 text-body-md text-body-md text-on-surface-variant list-decimal list-inside">
+<li>在 Chrome 瀏覽器中開啟此應用</li>
+<li>點擊選單按鈕（三個點）</li>
+<li>選擇「安裝應用程式」或「加入主畫面」</li>
+<li>確認安裝</li>
+</ol>
+<a href="https://support.google.com/chrome/answer/16738043?hl=zh-Hant" target="_blank" class="text-secondary font-label-bold text-label-bold hover:underline text-sm">查看詳細說明</a>
+</div>
+<div class="border-t border-outline-variant pt-4 space-y-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary">phone_iphone</span>
+<h4 class="font-label-bold text-label-bold text-on-surface">iOS (iPhone/iPad)</h4>
+</div>
+<ol class="space-y-2 text-body-md text-body-md text-on-surface-variant list-decimal list-inside">
+<li>在 Safari 瀏覽器中開啟此應用</li>
+<li>點擊分享按鈕（方形加箭頭）</li>
+<li>向下滑動並選擇「加入主畫面」</li>
+<li>點擊「加入」確認</li>
+</ol>
+<a href="https://mrmad.com.tw/add-iphone-chrome-web-page-to-main-screen" target="_blank" class="text-secondary font-label-bold text-label-bold hover:underline text-sm">查看詳細說明</a>
+</div>
+</div>
+</div>
+
+<!-- Copyright -->
+<div class="text-center pt-4">
+<p class="font-body-md text-body-md text-on-surface-variant opacity-60">
+© 2026 Lucky Draw
+</p>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+<script>
+        const history = [];
+        let appData = {
+            settings: {
+                minValue: 1,
+                maxValue: 1,
+                historyLimit: 8
+            },
+            statistics: {
+                totalDraws: 0,
+                allTimeHistory: []
+            }
+        };
+
+        // Initialize app data from localStorage
+        function initializeApp() {
+            const savedData = localStorage.getItem('lucky-draw-app-data');
+            if (savedData) {
+                appData = JSON.parse(savedData);
+                // Restore settings to UI
+                document.getElementById('min-val').value = appData.settings.minValue;
+                document.getElementById('max-val').value = appData.settings.maxValue;
+            }
+            // Load history
+            loadHistory();
+        }
+
+        // Save app data to localStorage
+        function saveAppData() {
+            localStorage.setItem('lucky-draw-app-data', JSON.stringify(appData));
+        }
+
+        // Load history from localStorage
+        function loadHistory() {
+            const savedHistory = localStorage.getItem('lucky-draw-history');
+            if (savedHistory) {
+                history.length = 0;
+                history.push(...JSON.parse(savedHistory));
+                renderHistory();
+            }
+        }
+
+        // Save history to localStorage
+        function saveHistory() {
+            localStorage.setItem('lucky-draw-history', JSON.stringify(history));
+        }
+
+        // Update settings when values change
+        function updateSettings(key, value) {
+            // 檢查最大值上限
+            if (key === 'max' && value > 10000) {
+                showCustomAlert('最大值不能超過10000');
+                // 恢復為10000
+                document.getElementById('max-val').value = 10000;
+                appData.settings.maxValue = 10000;
+                saveAppData();
+                return;
+            }
+            
+            if (key === 'min') {
+                appData.settings.minValue = value;
+            } else if (key === 'max') {
+                appData.settings.maxValue = value;
+            }
+            saveAppData();
+        }
+
+        // Toggle settings screen
+        function toggleSettings() {
+            const settingsScreen = document.getElementById('settings-screen');
+            
+            if (settingsScreen.classList.contains('hidden')) {
+                // Show settings screen
+                settingsScreen.classList.remove('hidden');
+                settingsScreen.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    settingsScreen.style.transform = 'translateX(0)';
+                    settingsScreen.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                }, 10);
+            } else {
+                // Hide settings screen
+                settingsScreen.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    settingsScreen.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Toggle about screen
+        function toggleAbout() {
+            const aboutScreen = document.getElementById('about-screen');
+            
+            if (aboutScreen.classList.contains('hidden')) {
+                // Show about screen
+                aboutScreen.classList.remove('hidden');
+                aboutScreen.style.transform = 'translateX(-100%)';
+                setTimeout(() => {
+                    aboutScreen.style.transform = 'translateX(0)';
+                    aboutScreen.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                }, 10);
+            } else {
+                // Hide about screen
+                aboutScreen.style.transform = 'translateX(-100%)';
+                setTimeout(() => {
+                    aboutScreen.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+                
+        // 驗證最大值輸入
+        function validateMaxInput(input) {
+            const value = parseInt(input.value);
+            if (value > 10000) {
+                showCustomAlert('最大值不能超過10000');
+                input.value = 10000;
+                updateSettings('max', 10000);
+            } else {
+                updateSettings('max', value);
+            }
+        }
+
+        function increment(id) {
+            const input = document.getElementById(id + '-val');
+            const newValue = parseInt(input.value) + 1;
+            
+            // 檢查最大值上限
+            if (id === 'max' && newValue > 10000) {
+                showCustomAlert('最大值不能超過10000');
+                return;
+            }
+            
+            input.value = newValue;
+            updateSettings(id, newValue);
+        }
+
+        function decrement(id) {
+            const input = document.getElementById(id + '-val');
+            const currentValue = parseInt(input.value);
+            if (currentValue > 0) {
+                const newValue = currentValue - 1;
+                input.value = newValue;
+                updateSettings(id, newValue);
+            }
+        }
+
+        function startDraw() {
+            const min = parseInt(document.getElementById('min-val').value);
+            const max = parseInt(document.getElementById('max-val').value);
+            const resultEl = document.getElementById('draw-result');
+            const resultContainer = document.getElementById('result-container');
+            const btn = document.getElementById('draw-btn');
+
+            if (min > max) {
+                showCustomAlert('最小值必須小於或等於最大值');
+                return;
+            }
+
+            // Disable interaction
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'scale-95');
+
+            // Rapid rolling effect
+            let counter = 0;
+            const interval = setInterval(() => {
+                const tempRand = Math.floor(Math.random() * (max - min + 1)) + min;
+                resultEl.innerText = tempRand.toString().padStart(2, '0');
+                counter++;
+                if (counter > 15) {
+                    clearInterval(interval);
+                    finalizeDraw(min, max);
+                }
+            }, 60);
+        }
+
+        function finalizeDraw(min, max) {
+            // 無限抽籤模式 - 允許重複數字
+            const finalResult = Math.floor(Math.random() * (max - min + 1)) + min;
+            
+            const resultEl = document.getElementById('draw-result');
+            const resultContainer = document.getElementById('result-container');
+            const btn = document.getElementById('draw-btn');
+
+            resultEl.innerText = finalResult.toString().padStart(2, '0');
+            
+            // Animation
+            resultContainer.classList.remove('draw-animation');
+            void resultContainer.offsetWidth; // trigger reflow
+            resultContainer.classList.add('draw-animation');
+
+            // Add to history
+            addToHistory(finalResult);
+
+            // Re-enable
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'scale-95');
+        }
+
+        function addToHistory(val) {
+            const historyItem = {
+                value: val,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                date: new Date().toLocaleDateString(),
+                timestamp: Date.now()
+            };
+            
+            // Add to current history
+            history.unshift(historyItem);
+            
+            // Add to all-time history
+            appData.statistics.allTimeHistory.unshift(historyItem);
+            
+            // Update statistics
+            appData.statistics.totalDraws++;
+            
+            // Limit history display
+            if (history.length > appData.settings.historyLimit) {
+                history.pop();
+            }
+            
+            // Limit all-time history (keep last 1000)
+            if (appData.statistics.allTimeHistory.length > 1000) {
+                appData.statistics.allTimeHistory.pop();
+            }
+            
+            // Save data
+            saveHistory();
+            saveAppData();
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            
+            if (history.length > 0) {
+                list.innerHTML = history.map(item => `
+                    <div class="flex flex-col items-center justify-center px-4 py-2 bg-surface-container border border-outline-variant rounded-lg animate-in fade-in slide-in-from-bottom-1 duration-300">
+                        <span class="font-headline-md text-headline-md text-secondary">${item.value}</span>
+                        <span class="text-[10px] text-on-surface-variant font-label-bold uppercase">${item.time}</span>
+                    </div>
+                `).join('');
+            } else {
+                list.innerHTML = '<p class="text-on-surface-variant font-body-md text-body-md opacity-60 italic" id="empty-history">尚無歷史記錄</p>';
+            }
+        }
+
+        function clearHistory() {
+            // Clear current history
+            history.length = 0;
+            
+            // Clear all-time history
+            appData.statistics.allTimeHistory = [];
+            
+            // Reset statistics
+            appData.statistics.totalDraws = 0;
+            
+            // Save data
+            saveHistory();
+            saveAppData();
+            renderHistory();
+        }
+
+        // Reset values function
+        function resetValues() {
+            // 重設為1
+            const minValue = 1;
+            const maxValue = 1;
+            
+            // 更新輸入框
+            document.getElementById('min-val').value = minValue;
+            document.getElementById('max-val').value = maxValue;
+            
+            // 更新設定
+            appData.settings.minValue = minValue;
+            appData.settings.maxValue = maxValue;
+            
+            // 儲存設定
+            saveAppData();
+        }
+
+        // Custom Alert Functions
+        function showCustomAlert(message) {
+            const modal = document.getElementById('custom-alert');
+            const content = document.getElementById('custom-alert-content');
+            const messageEl = document.getElementById('custom-alert-message');
+            
+            messageEl.innerText = message;
+            modal.classList.remove('hidden');
+            
+            // Trigger animation
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+        
+        function hideCustomAlert() {
+            const modal = document.getElementById('custom-alert');
+            const content = document.getElementById('custom-alert-content');
+            
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Initialize app when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+            </script>
+</body></html>
