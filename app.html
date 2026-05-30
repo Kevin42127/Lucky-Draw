@@ -4,11 +4,6 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Lucky Draw</title>
-<link rel="manifest" href="manifest.json"/>
-<meta name="theme-color" content="#4648d4"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
-<meta name="apple-mobile-web-app-title" content="Lucky Draw"/>
 <link rel="apple-touch-icon" href="public/apple-touch-icon.png"/>
 <link rel="icon" type="image/png" href="public/favicon-96x96.png"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -832,17 +827,6 @@
         // Initialize app when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
-            
-            // Register Service Worker for PWA
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker 註冊成功:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Service Worker 註冊失敗:', error);
-                    });
-            }
         });
 
             </script>
