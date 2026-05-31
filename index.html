@@ -153,15 +153,27 @@
             }
         }
         
-        /* 桌面版滾動設定 - 滾動條在瀏覽器視窗右邊 */
+        /* 桌面版滾動設定 - 可滾動但不顯示滾動條 */
         @media (min-width: 768px) {
             .mobile-scrollable {
-                overflow-y: visible;
+                overflow-y: auto;
+                scroll-behavior: smooth;
                 padding-bottom: 2rem;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .mobile-scrollable::-webkit-scrollbar {
+                display: none;
             }
             .settings-scrollable {
-                overflow-y: visible;
+                overflow-y: auto;
+                scroll-behavior: smooth;
                 padding-bottom: 2rem;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .settings-scrollable::-webkit-scrollbar {
+                display: none;
             }
         }
     </style>
