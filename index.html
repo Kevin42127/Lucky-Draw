@@ -824,6 +824,20 @@
             }, 300);
         }
 
+        // 清除舊的 Service Worker 快取
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for (let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+            caches.keys().then(function(cacheNames) {
+                cacheNames.forEach(function(cacheName) {
+                    caches.delete(cacheName);
+                });
+            });
+        }
+
         // Initialize app when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
