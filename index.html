@@ -153,44 +153,15 @@
             }
         }
         
-        /* 桌面版滾動設定 */
+        /* 桌面版滾動設定 - 滾動條在瀏覽器視窗右邊 */
         @media (min-width: 768px) {
             .mobile-scrollable {
-                overflow-y: auto;
-                scroll-behavior: smooth;
+                overflow-y: visible;
                 padding-bottom: 2rem;
             }
-            .mobile-scrollable::-webkit-scrollbar {
-                width: 6px;
-            }
-            .mobile-scrollable::-webkit-scrollbar-track {
-                background: transparent;
-            }
-            .mobile-scrollable::-webkit-scrollbar-thumb {
-                background: #767586;
-                border-radius: 3px;
-            }
-            .mobile-scrollable::-webkit-scrollbar-thumb:hover {
-                background: #464554;
-            }
-            
             .settings-scrollable {
-                overflow-y: auto;
-                scroll-behavior: smooth;
+                overflow-y: visible;
                 padding-bottom: 2rem;
-            }
-            .settings-scrollable::-webkit-scrollbar {
-                width: 6px;
-            }
-            .settings-scrollable::-webkit-scrollbar-track {
-                background: transparent;
-            }
-            .settings-scrollable::-webkit-scrollbar-thumb {
-                background: #767586;
-                border-radius: 3px;
-            }
-            .settings-scrollable::-webkit-scrollbar-thumb:hover {
-                background: #464554;
             }
         }
     </style>
@@ -210,8 +181,41 @@
       }
     }
     
+    /* 桌面版取消 fixed 定位，讓 html 負責滾動 */
+    @media (min-width: 768px) {
+      .desktop-unfix {
+        position: relative !important;
+        inset: auto !important;
+        height: auto !important;
+        min-height: 100vh;
+      }
+      .desktop-unfix > .universal-container {
+        height: auto !important;
+        min-height: 100vh;
+      }
+    }
+
     /* 統一網頁版和手機版尺寸 - 桌面版完全模擬手機版 */
     @media (min-width: 768px) {
+      html {
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #767586 transparent;
+      }
+      html::-webkit-scrollbar {
+        width: 6px;
+      }
+      html::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      html::-webkit-scrollbar-thumb {
+        background: #767586;
+        border-radius: 3px;
+      }
+      html::-webkit-scrollbar-thumb:hover {
+        background: #464554;
+      }
       html, body {
         width: 414px;
         max-width: 414px;
@@ -243,7 +247,7 @@
   </head>
 <body class="font-body-md text-body-md">
 <!-- Main Screen -->
-<div class="fixed inset-0 z-40">
+<div class="fixed inset-0 z-40 desktop-unfix">
 <div class="universal-container h-full flex flex-col bg-surface">
 <!-- Top Navigation -->
 <header class="flex items-center justify-between py-4 border-b border-outline-variant relative z-10">
